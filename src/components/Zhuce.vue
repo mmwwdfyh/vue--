@@ -104,7 +104,7 @@ export default {
         this.$toast.fail("密码不一致，请重新输入");
         return false;
       }
-      this.$toast.success("恭喜你,注册成功");
+      this.zhuce()
     },
     //生成图形验证码
     createImgCode() {
@@ -149,9 +149,10 @@ export default {
      sendCode(){
          this.$axios({
              url:"https://api.it120.cc/small4/verification/sms/get",
+             method: "post",
              params:{
                  mobile:this.mobile,
-                 key:this.Key,
+                 key:this.picKey,
                  picCode:this.picCode,
              }
          }).then((res)=>{
@@ -160,8 +161,23 @@ export default {
                  return false;
              }
              this.countSeconds();
-             console.log(res)
+            //  console.log(res)
          })
+     },
+     zhuce(){
+       this.$axios({
+         url:"https://api.it120.cc/small4/user/m/register",
+         method: "post",
+         params:{
+           mobile:this.mobile,
+           pwd:this.pwd,
+           code:this.code,
+         }
+       }).then((res)=>{
+         console.log(res)
+      // this.$toast.success("恭喜你,注册成功");
+          this.$router.push("/denglu")
+       })
      }
   }
 };
