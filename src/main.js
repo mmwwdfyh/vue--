@@ -18,25 +18,28 @@ Vue.use(Vant);
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    // store.state.isLoading = true
+    store.state.Loading = true
     return config;
   },
-  error => {
-    return Promise.error(error);
-  }
+  // error => {
+  //   return Promise.error(error);
+  // }
 );
 // 响应
 axios.interceptors.response.use(
   response => {
-    console.log(response)
-    // store.state.isLoading = false
+    // console.log(response)
+    // setTimeout(()=>{
+    // },2000)
+    
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
+      store.state.Loading = false
       return Promise.resolve(response.data);
     } else {
       return Promise.reject(response);
-      
+
     }
   },
   // 服务器状态码不是2开头的的情况
@@ -51,7 +54,15 @@ axios.interceptors.response.use(
 );
 Vue.prototype.$axios = axios
 
+//全局路由守卫,进入组件之前触发
+router.beforeEach((to, from, next) => {
+  //判断路由是否设置title值，给组件添加标题内容
+  // if (to.hasOwnProperty("meta")) {
+  //   document.title = to.meta.title;
+  // }
 
+  next();
+})
 
 
 

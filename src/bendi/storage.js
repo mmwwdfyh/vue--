@@ -1,6 +1,6 @@
 //字面量的方式定义一个变量,JSON.stringify()  JSON.parse();
 
-let storage = {
+const storage = {
     //设置本地存储  key，value  isJson
     //isJson是否需要对数据进行json对象转换
     set: function (key, value, isJson = false) {

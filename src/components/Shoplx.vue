@@ -1,5 +1,8 @@
 <template>
-  <div></div>
+  <div>
+    首页
+
+  </div>
 </template>
 
 <script>
@@ -25,4 +28,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+div{
+  font-size: 0.14rem;
+}
 </style>

@@ -1,0 +1,88 @@
+<template>
+  <div>
+    <van-nav-bar title="我的购物车" left-arrow @click-left="goBack" />
+    <!-- 购物车的列表组装件 -->
+    <div class="item" v-for="(item,index) in cartList" :key="index">
+      <van-checkbox v-model="item.checked" />
+      <van-card class="card" :price="item.price" :title="item.name" :thumb="item.pic">
+        <template #num>
+          <van-stepper v-model="item.nums" />
+        </template>
+      </van-card>
+    </div>
+    <div class="div">
+        <button>提交订单</button>
+      <!-- <van-submit-bar button-text="提交订单"> -->
+          <p :price="totalAmounts"></p>
+      <van-checkbox v-model="checked">全选</van-checkbox>
+      <!-- </van-submit-bar> -->
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      cartList: [],
+      checked: true
+    };
+  },
+  created() {},
+  mounted() {
+    this.cartList = this.$store.state.cartList;
+  },
+  computed: {
+    totalAmounts() {
+      let amounts = 0;
+      this.cartList.forEach(item => {
+        if (item.checked == true) {
+          amounts += item.nums * item.price;
+        }
+      });
+      return amounts * 100;
+    }
+  },
+  watch: {
+    cartList: {
+      handler(value) {
+        this.$store.commit("addCart", value);
+        this.$store.commit("countCarts");
+
+        let arr = value.filter(item => {
+          return item.checked == true;
+        });
+        if (value.length == arr.length) {
+          this.checked = true;
+        } else {
+          this.checked = false;
+        }
+      },
+      deep: true
+    }
+  },
+  methods: {
+    goBack() {
+      this.$router.go(-1);
+      //   this.$router.push("/")
+    }
+  }
+};
+</script>
+
+<style scoped lang="less">
+.item {
+  padding: 0.2rem;
+  box-sizing: border-box;
+  display: flex;
+  .card {
+    flex: 1;
+  }
+}
+.div{
+    width: 100%;
+    height: 20rem;
+    font-size: 0.14rem;
+}
+
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="标题" left-text="返回"  />
+    <van-nav-bar title="标题" left-text="返回" />
     <!-- <van-cell-group> -->
     <van-form>
       <van-field v-model="mobile" type="tel" label="手机号" right-icon="graphic" />
@@ -51,16 +51,19 @@
       <van-button type="info" block @click="checkForm">立即注册</van-button>
       <!-- </van-cell-group> -->
     </van-form>
+    <p class="link-login">
+      <router-link to="/denglu">已有账号立即登录</router-link>
+    </p>
   </div>
 </template>
 
 <script>
 import AreaList from "@/assets/area";
 export default {
-    name:"",
-    mounted(){
-        this.createImgCode();
-    },
+  name: "",
+  mounted() {
+    this.createImgCode();
+  },
   data() {
     return {
       mobile: "",
@@ -104,81 +107,81 @@ export default {
         this.$toast.fail("密码不一致，请重新输入");
         return false;
       }
-      this.zhuce()
+      this.zhuce();
     },
     //生成图形验证码
     createImgCode() {
-        this.picKey = (new Date()).getTime();
-        let apiUrl = "https://api.it120.cc/small4/verification/pic/get";
-        this.imgUrl = `${apiUrl}?key=${this.picKey}`;
+      this.picKey = new Date().getTime();
+      let apiUrl = "https://api.it120.cc/small4/verification/pic/get";
+      this.imgUrl = `${apiUrl}?key=${this.picKey}`;
     },
     //选择城市函数
-    selectedArea(arr){
-        this.areaShow = false;
-         //去除数组中的name值
-         let tmp = arr.map((item)=>{
-             return item.name;
-         });
-           //处理省份和市
-           this.province = tmp[0];
-           this.city = tmp[1];
-            //数组转换程字符串
+    selectedArea(arr) {
+      this.areaShow = false;
+      //去除数组中的name值
+      let tmp = arr.map(item => {
+        return item.name;
+      });
+      //处理省份和市
+      this.province = tmp[0];
+      this.city = tmp[1];
+      //数组转换程字符串
       this.area = tmp.join(" ");
     },
-        //倒计时的功能
-    countSeconds(){
+    //倒计时的功能
+    countSeconds() {
       this.btnIsDisabled = true;
       //倒计时的时间
       let timeout = 60;
       //倒计时间歇
       let timer = setInterval(() => {
         //读秒结束
-        if(timeout<1){
-          this.btnIsDisabled =false;
+        if (timeout < 1) {
+          this.btnIsDisabled = false;
           //清除定时器
           clearInterval(timer);
           this.msg = `重新发送`;
           return false;
         }
         //正在倒计时的时候
-        this.msg = `${timeout}s后再试`
+        this.msg = `${timeout}s后再试`;
         timeout--;
       }, 1000);
     },
-     //发送验证码接口
-     sendCode(){
-         this.$axios({
-             url:"https://api.it120.cc/small4/verification/sms/get",
-             method: "post",
-             params:{
-                 mobile:this.mobile,
-                 key:this.picKey,
-                 picCode:this.picCode,
-             }
-         }).then((res)=>{
-             if(res.code !=0){
-                 this.$toast.fail(res.msg);
-                 return false;
-             }
-             this.countSeconds();
-            //  console.log(res)
-         })
-     },
-     zhuce(){
-       this.$axios({
-         url:"https://api.it120.cc/small4/user/m/register",
-         method: "post",
-         params:{
-           mobile:this.mobile,
-           pwd:this.pwd,
-           code:this.code,
-         }
-       }).then((res)=>{
-         console.log(res)
-      // this.$toast.success("恭喜你,注册成功");
-          this.$router.push("/denglu")
-       })
-     }
+    //发送验证码接口
+    sendCode() {
+      this.$axios({
+        url: "https://api.it120.cc/small4/verification/sms/get",
+        method: "post",
+        params: {
+          mobile: this.mobile,
+          key: this.picKey,
+          picCode: this.picCode
+        }
+      }).then(res => {
+        if (res.code != 0) {
+          this.$toast.fail(res.msg);
+          return false;
+        }
+        this.countSeconds();
+        //  console.log(res)
+      });
+    },
+    zhuce() {
+      this.$axios({
+        url: "https://api.it120.cc/small4/user/m/register",
+        method: "post",
+        params: {
+          mobile: this.mobile,
+          pwd: this.pwd,
+          code: this.code
+        }
+      }).then(res => {
+        console.log(res);
+        // this.$toast.success("恭喜你,注册成功");
+        this.$router.push("/denglu");
+      });
+    }
   }
 };
 </script>

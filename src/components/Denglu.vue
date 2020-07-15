@@ -24,10 +24,16 @@
         <van-button round block type="info" @click="button" native-type="submit">提交</van-button>
       </div>
     </van-form>
+    <p class="link-login">
+      <router-link to="/zhuce">还没有注册? 立即注册</router-link>
+    </p>
   </div>
 </template>
 
 <script>
+//引入本地存储的的方法
+import storage from "@/bendi/storage";
+
 export default {
   data() {
     return {
@@ -35,6 +41,19 @@ export default {
       pass: "",
       hidePwd: true
     };
+  },
+  //组件内路由守卫，判断用户是否登陆
+  beforeRouteEnter(to, from, next) {
+    //获取用户本地存储的token值，判断是否为空
+    let data = storage.get("shuj", true);
+    ///已经登陆过，直接跳转到首页
+    if (data != null) {
+      next("/");
+    } else {
+      //没有登陆，继续在当前页面停留
+      next();
+    }
+    console.log(next);
   },
   created() {},
   mounted() {},
@@ -49,14 +68,19 @@ export default {
           pwd: this.pass
         }
       }).then(res => {
-        if (res.code !=0) {
+        if (res.code != 0) {
           console.log(res);
-          alert("密码错误")
-        }else{
-            
-          this.$toast.success("恭喜你,denglu");
-
+          this.$toast.fail(res.msg);
+          return false;
         }
+        //把用户登陆成功的信息给他存储到本地
+        let user = new Object();
+        user.uid = res.data.uid;
+        user.token = res.data.token;
+        user.account = this.mobile;
+        storage.set("shuj", user, true);
+
+        this.$toast.success("恭喜你,denglu");
       });
     }
   }
