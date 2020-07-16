@@ -17,6 +17,8 @@ import List from '@/components/List'
 import Sou from '@/components/Sou'
 import Xiangqing from '@/components/Xiangqing'
 import Shanxiang from '@/components/Shanxiang'
+import Dingdan from '@/components/Dingdan'
+import Kuan from '@/components/Kuan'
 
 
 Vue.use(Router)
@@ -109,5 +111,13 @@ export default new Router({
       path: "/shanxiang",
       component: Shanxiang
     },
+    {
+      path:"/dingdan",
+      component:Dingdan
+    },
+    {
+      path:"/kuan",
+      component:Kuan
+    }
   ]
 })

@@ -10,13 +10,13 @@
         </template>
       </van-card>
     </div>
-    <div class="div">
-        <button>提交订单</button>
-      <!-- <van-submit-bar button-text="提交订单"> -->
-          <p :price="totalAmounts"></p>
-      <van-checkbox v-model="checked">全选</van-checkbox>
-      <!-- </van-submit-bar> -->
-    </div>
+   
+    <!-- <button>提交订单</button> -->
+    <van-submit-bar button-text="提交订单" :price="totalAmounts" @submit="submitOrder">
+      <!-- <p ></p> --> 
+      <van-checkbox v-model="checked" >全选</van-checkbox>
+    </van-submit-bar>
+    
   </div>
 </template>
 
@@ -65,6 +65,19 @@ export default {
     goBack() {
       this.$router.go(-1);
       //   this.$router.push("/")
+    },
+    //提交订单的数据
+    submitOrder(){
+      this.$toast.loading({
+        duration:3000,
+        message:"商品准备中",
+        overlay:true
+      })
+  //获取订单的数据信息
+    this.$store.commit("setOrderList");
+    setTimeout(()=>{
+      this.$router.push("/dingdan")
+    },2000)
     }
   }
 };
@@ -79,10 +92,15 @@ export default {
     flex: 1;
   }
 }
-.div{
-    width: 100%;
-    height: 20rem;
-    font-size: 0.14rem;
+.div {
+  width: 100%;
+  height: 20rem;
+  font-size: 0.14rem;
 }
-
+.van-submit-bar__bar{
+  display: flex;
+  background-color: #f4f4f4;
+  position: fixed;
+  bottom: 0.5rem;
+}
 </style>

@@ -40,6 +40,7 @@ export default {
   created() {
     this.$axios.get("https://api.it120.cc/small4/banner/list").then(mgs => {
       this.bannerlist = mgs.data;
+      // console.log(mgs)
     });
   },
   mounted() {},

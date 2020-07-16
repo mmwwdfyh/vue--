@@ -31,9 +31,15 @@
       v-model="show"
       :sku="sku"
       :goods="goods"
+      :goods-id="goodsId"
+      :quota="quota"
+      :quota-used="quotaUsed"
+      :hide-stock="sku.hide_stock"
       :custom-stepper-config="customStepperConfig"
       @add-cart="addCart"
+      @buy-clicked="toogle"
     />
+    <!-- @sku-selected="selectedSku" -->
     <div class="arrow" @click="goBack">
       <van-icon name="arrow-left" size="14px" />
     </div>
@@ -42,6 +48,7 @@
 
 <script>
 export default {
+  name: "",
   data() {
     return {
       active: 0,
@@ -49,6 +56,7 @@ export default {
       banners: [],
       content: null,
       show: false,
+      skuShow: false,
       goodsInfo: [],
       sku: {
         //sku的规格类目，比如商品的颜色，尺寸
@@ -83,7 +91,8 @@ export default {
           this.nums = currentValue;
         }
       },
-      nums: 1
+      nums: 1,
+      propertyIds: "" // 选中商品的sku的数据
     };
   },
   mounted() {
@@ -100,8 +109,8 @@ export default {
     jia() {
       this.show = true;
     },
-    gotoCart(){
-      this.$router.push("/gou")
+    gotoCart() {
+      this.$router.push("/gou");
     },
     shang() {
       this.$axios({
@@ -152,12 +161,21 @@ export default {
           obj.stock_num = 120;
 
           list.push(obj);
+          console.log(item);
         });
       });
       console.log(list);
       this.sku.tree = tree;
       this.sku.list = list;
-      console.log(this.sku)
+      console.log(this.sku);
+    },
+    //切换规格的时候触发
+    selsctedSku(data) {
+      this.propertyIds = `${data.skuValue.propertyIds}:${data.skuValue.id}`;
+    },
+    //立即够买
+    toogle() {
+      this.$router.push("/dingdan");
     },
     //加入购物车
     addCart() {
@@ -177,30 +195,28 @@ export default {
         //判断当前商品的ID是否重复
         return item.goods_id == this.gId;
       });
-      console.log(index);
+      console.log(this,index);
 
       if (index == -1) {
-         //添加购物车对象信息
-         let object = new Object();
-         object.goods_id = this.gId;
-         object.name = this.goodsInfo.name
-         object.price = this.goodsInfo.originalPrice;
-         object.nums = this.nums;
-         object.checked = true;
-         object.properties = "";
-         object.pic = this.goods.picture;
-         cartList.push(object);
-      }else{
-        cartList[index].nums+= this.nums; //数量的自增的操作
+        //添加购物车对象信息
+        let object = new Object();
+        object.goods_id = this.gId;
+        object.name = this.goodsInfo.name;
+        object.price = this.goodsInfo.originalPrice;
+        object.nums = this.nums;
+        object.checked = true;
+        object.properties = this.propertyIds; //商品sku规格信息
+        object.pic = this.goods.picture;
+        cartList.push(object);
+      } else {
+        cartList[index].nums += this.nums; //数量的自增的操作
       }
-
 
       this.show = false;
       this.$toast.success("添加购物车成功");
-      this.$store.commit("addCart",cartList);
+      this.$store.commit("addCart", cartList);
       this.$store.commit("countCarts");
-    },
-
+    }
   }
 };
 </script>
