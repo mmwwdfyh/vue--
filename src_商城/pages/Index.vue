@@ -2,19 +2,25 @@
   <div class="box">
     <Banner></Banner>
     <Kj></Kj>
+    <Jxuan></Jxuan>
+    <Renqi></Renqi>
   </div>
 </template>
 
 <script>
 import Banner from "../components/Banner";
 import Kj from "../components/Kj";
+import Jxuan from "../components/Jxuan";
+import Renqi from "../components/Renqi";
 export default {
   data() {
     return {};
   },
   components: {
     Banner,
-    Kj
+    Kj,
+    Jxuan,
+    Renqi
   },
   created() {},
   mounted() {},

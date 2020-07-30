@@ -14,11 +14,10 @@ import 'vant/lib/index.css';
 
 Vue.use(Vant);
 
-
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    store.state.Loading = true
+    // store.state.isLoading = true
     return config;
   },
   // error => {
@@ -29,17 +28,13 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     // console.log(response)
-    // setTimeout(()=>{
-    // },2000)
-    
+    // store.state.isLoading = false
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
-      store.state.Loading = false
-      return Promise.resolve(response.data);
+      return Promise.resolve(response);
     } else {
       return Promise.reject(response);
-
     }
   },
   // 服务器状态码不是2开头的的情况
@@ -63,6 +58,7 @@ router.beforeEach((to, from, next) => {
 
   next();
 })
+
 
 
 

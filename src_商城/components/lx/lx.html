@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+
+    let object = new Object();
+    let string = "hello js";
+    Object.defineProperty(object, "name", {
+        get() {
+            console.log("我是get方法")
+            return string;
+        },
+        set(newValue) {
+            console.log("我是set方法")
+            string = newValue;
+        }
+    });
+
+    console.log(object.name);
+
+    object.name = "hellp Vue"
+    console.log(string)
+
+
+</script>
+
+</html>

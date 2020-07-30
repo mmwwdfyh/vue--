@@ -1,8 +1,9 @@
 <template>
   <div class="box">
     <div class="list">
-      <p>全民砍价></p>
+      <p @click="toogle">全民砍价></p>
     </div>
+    <!--v-if="!loading" <van-loading size="24px" v-show="loading">加载中....</van-loading> -->
     <div>
       <div class="coom" v-for="(item,index) in kjlist" :key="index">
         <img :src="item.pic" alt />
@@ -38,17 +39,26 @@ export default {
       kjlist: []
     };
   },
-  // 获取数据
   created() {
     this.$axios
       .get("https://api.it120.cc/small4/shop/goods/kanjia/list")
       .then(mgs => {
-        console.log(mgs)
-        this.kjlist = mgs.data.data.goodsMap;
+        //取出对象中key只，并且截取
+        let ff = Object.keys(mgs.data.goodsMap).splice(-3);
+        let arr = [];
+        //通过key获取对象的value值，添加到数组中去
+        ff.forEach(item => {
+          arr.push(mgs.data.goodsMap[item]);
+        });
+        this.kjlist = arr;
       });
   },
   mounted() {},
-  methods: {}
+  methods: {
+    toogle() {
+      this.$router.push("/kanjia");
+    }
+  }
 };
 </script>
 

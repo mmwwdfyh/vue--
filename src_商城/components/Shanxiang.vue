@@ -31,11 +31,9 @@
       v-model="show"
       :sku="sku"
       :goods="goods"
-      :goods-id="goodsId"
-      :quota="quota"
-      :quota-used="quotaUsed"
       :hide-stock="sku.hide_stock"
       :custom-stepper-config="customStepperConfig"
+      @sku-selected='selectcar'
       @add-cart="addCart"
       @buy-clicked="toogle"
     />
@@ -127,6 +125,7 @@ export default {
         this.goodsInfo = res.data.basicInfo;
         //设置sku的信息
         this.setSku(res.data.properties);
+        console.log(res.data.properties)
         this.goods.picture = this.banners[0].pic;
       });
     },
@@ -170,8 +169,9 @@ export default {
       console.log(this.sku);
     },
     //切换规格的时候触发
-    selsctedSku(data) {
-      this.propertyIds = `${data.skuValue.propertyIds}:${data.skuValue.id}`;
+    selectcar(data) {
+      console.log(data.skuValue)
+      this.propertyIds = `${data.skuValue.propertyId}:${data.skuValue.id}`;
     },
     //立即够买
     toogle() {
@@ -189,13 +189,12 @@ export default {
       }
       //用户已经登录的信息,添加购物车信息，
       let cartList = this.$store.state.cartList; //购物车的列表数据
-
       //找出
       let index = cartList.findIndex(item => {
         //判断当前商品的ID是否重复
         return item.goods_id == this.gId;
       });
-      console.log(this,index);
+      console.log(this.propertyIds);
 
       if (index == -1) {
         //添加购物车对象信息
@@ -208,6 +207,7 @@ export default {
         object.properties = this.propertyIds; //商品sku规格信息
         object.pic = this.goods.picture;
         cartList.push(object);
+        console.log(object)
       } else {
         cartList[index].nums += this.nums; //数量的自增的操作
       }
@@ -216,7 +216,9 @@ export default {
       this.$toast.success("添加购物车成功");
       this.$store.commit("addCart", cartList);
       this.$store.commit("countCarts");
+       
     }
+   
   }
 };
 </script>

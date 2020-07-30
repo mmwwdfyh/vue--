@@ -19,10 +19,10 @@
       <van-card
         v-for="(item,index) in this.$store.state.orderList"
         :key="index"
-        :thumb="item.nums"
         :title="item.name"
         :price="item.price"
       ></van-card>
+      <!-- :thumb="item.nums" -->
     </div>
     <div class="remark">
       <van-field placeholder="如需备注请输入" label="备注"></van-field>
@@ -85,18 +85,24 @@ export default {
         let object = new Object();
         object.goodsId = item.goods_id;
         object.number = item.nums;
-        object.propertyChildIds = this.properties;
+        object.propertyChildIds = item.properties;
         object.logisticsType = 0;
         arr.push(object);
+        console.log(item.properties)
       });
+      console.log(this.$store.state.orderList);
+      console.log(arr);
       //创建订单的接口数据
       //创建formDate的数据
+
       let formdata = new FormData();
       formdata.append("token", user.token);
       formdata.append("goodsJsonStr", JSON.stringify(arr));
+
       this.$axios
         .post("https://api.it120.cc/small4/order/create", formdata)
         .then(res => {
+          console.log(res);
           this.$toast.loading({
             message: "订单正在努力生成中",
             overlay: true

@@ -1,10 +1,9 @@
 <template>
   <div>
-    <!-- 轮播图 -->
     <div class="banner">
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-        <van-swipe-item v-for="(item,index) in banner" :key="index">
-          <img :src="item.picUrl" alt />
+        <van-swipe-item v-for="(item,index) in bannerlist" :key="index">
+          <img :src="item.picUrl" />
         </van-swipe-item>
       </van-swipe>
       <nav>
@@ -17,11 +16,11 @@
             <van-icon name="bag" size="50" color="#FF0000" />
             <p>礼券</p>
           </li>
-          <li>
+          <li @click="toogle">
             <van-icon name="coupon" size="50" color="#FF0000" />
             <p>砍价</p>
           </li>
-          <li>
+          <li @click="zhuan">
             <van-icon name="gift" size="50" color="#FF0000" />
             <p>专栏</p>
           </li>
@@ -35,24 +34,26 @@
 export default {
   data() {
     return {
-      banner: []
+      bannerlist: []
     };
   },
-  // 获取数据
   created() {
-    this.$axios.get("https://api.it120.cc/small4/banner/list").then(res => {
-      console.log(res);
-      this.banner = res.data.data;
+    this.$axios.get("https://api.it120.cc/small4/banner/list").then(mgs => {
+      this.bannerlist = mgs.data;
+      // console.log(mgs)
     });
   },
   mounted() {},
-  methods: {}
+  methods: {
+    toogle(){
+      this.$router.push("/kanjia")
+    },
+    zhuan(){
+      this.$router.push("/zhuan")
+    }
+  }
 };
 </script>
-
-
-
-
 
 <style scoped lang="less">
 .my-swipe .van-swipe-item {
